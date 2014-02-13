@@ -7,7 +7,7 @@
 <style type="text/css">
 * {
     margin: 0;
-    padding: 0;
+    padding: 1;
 }
 body {
 	font-family: sans-serif;
@@ -40,7 +40,7 @@ body {
 				<td><form:label path="nombre">
 						<spring:message code="label.nombre" />
 					</form:label></td>
-				<td><form:input path="nombre" /></td>
+				<td><form:input path="nombre"/></td>
 			</tr>
 			<tr>
 				<td><form:label path="apellido">
@@ -73,6 +73,7 @@ body {
 				<th><spring:message code="label.nombre" /></th>
 				<th><spring:message code="label.email" /></th>
 				<th><spring:message code="label.telefono" /></th>
+				<th>&nbsp;</th>
 				<th>&nbsp;</th>
 			</tr>
 			<c:forEach items="${contactoList}" var="contacto">

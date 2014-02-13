@@ -5,8 +5,6 @@ import java.util.Map;
 import marcos.demo.form.Contacto;
 import marcos.demo.servicio.ServicioContacto;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,14 +19,23 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControladorContacto {
 	
+	private ModelMap modelo= new ModelMap();
+	private Contacto contact = new Contacto();
 	@Autowired
 	private ServicioContacto servicioContacto;
+	
 	
 	@RequestMapping("/")
 	 public String listContacts(Map<String, Object> map) {
 		
+		if (modelo.isEmpty()){
+			contact.setId(-1);
+			map.put("contacto",contact);
+		}else{
+			map.putAll(modelo);
+			modelo.clear();
+		}
 		
-		map.put("contacto", new Contacto());
 		map.put("contactoList", servicioContacto.listContact());
 				
 		return "contacto";
@@ -37,8 +44,17 @@ public class ControladorContacto {
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	 public String addContacto(@ModelAttribute("contacto") Contacto contacto, BindingResult result) {
-
-		servicioContacto.addContact(contacto);
+		
+		if (contacto.getId()>=1){
+			
+			servicioContacto.updateContact(contacto);
+			
+		}else{
+			
+			servicioContacto.addContact(contacto);
+			
+		}
+		
 		
 		return "redirect:/";
 	 }
@@ -52,15 +68,17 @@ public class ControladorContacto {
 	 }
 	
 	@RequestMapping("/update/{contactId}")
-	 public ModelAndView updateContact(@PathVariable("contactId") Integer contactId) {
+	 public String updateContact(@PathVariable("contactId") Integer contactId) {
 		
-		ModelAndView mav = new ModelAndView("contactoUpdate");
+		/*ModelAndView mav = new ModelAndView("contactoUpdate");
 		Contacto contacto = servicioContacto.getContactoId(contactId);
 		mav.addObject("lista", contacto);
 		System.out.println("Cantidad: "+contacto.getNombre());
-		System.out.println("CantidadIS: "+mav.isEmpty());
+		System.out.println("CantidadIS: "+mav.isEmpty());*/
+		//modelo = new ModelMap();
+		modelo.put("contacto",servicioContacto.getContactoId(contactId));
 		
-		return mav;
+		return "redirect:/";
 	 }
 	
 	@RequestMapping(value="update",method = RequestMethod.POST)

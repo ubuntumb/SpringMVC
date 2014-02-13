@@ -3,7 +3,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
-<title>Spring 3 MVC Series - Contacto</title>
+<title>...Spring 3 MVC Series - Contacto...</title>
 <style type="text/css">
 * {
     margin: 0;
@@ -29,6 +29,37 @@ body {
 	color: white;
 }
 </style>
+
+<script type="text/javascript"> 
+	var velocidad=200;
+	var letras;
+	function animar()
+	{
+		letras=new Array();
+		var texto="Uso de cadenas con JavaScript para efectos dinámicos";
+		for(i=0;i<texto.length;i++)
+		{
+			letras[i]=texto.charAt(i);
+		}
+		mueveLetras();
+	}
+	var TextoAct="";
+	var n=-1;
+	function mueveLetras()
+	{
+		n++;
+		TextoAct += letras[n];
+		document.write(document.cookie);
+		document.title=TextoAct;
+		if(n==letras.length-1)
+		{
+			n=-1;
+			TextoAct="";
+		}
+		setTimeout("mueveLetras()",velocidad);
+		window.onload=animar();
+	}
+</script>
 </head>
 <body>
 	<h2>
@@ -36,6 +67,10 @@ body {
 	</h2>
 	<form:form method="post" action="add.html" commandName="contacto">
 		<table>
+			<tr>
+				<td>ID</td>
+				<td><form:input path="id" readonly="true" /></td>
+			</tr>
 			<tr>
 				<td><form:label path="nombre">
 						<spring:message code="label.nombre" />
@@ -62,7 +97,11 @@ body {
 			</tr>
 			<tr>
 				<td colspan="2"><input type="submit"
-					value="<spring:message code="label.addcontact"/>" /></td>
+					value="<spring:message code="label.addcontact"/>" />
+				</td>
+				<td>
+					<a href="/marcos.demo/">limpiar</a>
+				</td>
 			</tr>
 		</table>
 	</form:form>
@@ -75,6 +114,7 @@ body {
 				<th><spring:message code="label.telefono" /></th>
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>
+				  
 			</tr>
 			<c:forEach items="${contactoList}" var="contacto">
 				<tr>
