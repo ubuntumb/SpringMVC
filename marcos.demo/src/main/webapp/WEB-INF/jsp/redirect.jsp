@@ -10,7 +10,8 @@
 
 <body>
 	<p>Hello! This is the default welcome page for a Spring Web MVC
-		project.</p>
+		project.
+	</p>
 	<p>
 		<a href="index.htm"> Pagina de Contacto! </a>
 		<h1>${session}</h1>

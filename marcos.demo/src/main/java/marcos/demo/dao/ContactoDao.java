@@ -1,18 +1,8 @@
 package marcos.demo.dao;
 
+import marcos.demo.entity.Contacto;
 
-import java.util.ArrayList;
 
-import org.hibernate.Session;
+public interface ContactoDao extends GenericsDao<Contacto> {
 
-import marcos.demo.form.Contacto;
-
-public interface ContactoDao {
-
-	public void addContact(Contacto contacto);
-	public ArrayList<Contacto> listContact();
-	public void removeContact(Integer id);
-	public void updateContact(Contacto contacto);
-	public Contacto getContactoId(Integer id);
-	public Session getSession();
 }
