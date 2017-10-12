@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
+@RequestMapping("/contacto")
 public class ControladorContacto {
 
 	private ModelMap modelo = new ModelMap();
@@ -23,7 +24,7 @@ public class ControladorContacto {
 	@Autowired
 	private ServicioContacto servicioContacto;
 
-	@RequestMapping("/")
+	@RequestMapping("/index")
 	public String listContacts(Map<String, Object> map) {
 
 		if (modelo.isEmpty()) {
@@ -39,7 +40,7 @@ public class ControladorContacto {
 
 		map.put("contactoList", servicioContacto.getAll());
 
-		return "contacto";
+		return "contacto/index";
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
