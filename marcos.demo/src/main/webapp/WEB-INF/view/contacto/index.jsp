@@ -59,8 +59,7 @@
 						<spring:message code="default.list.label" arguments="Contactos" />
 					</div>
 					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover"
+							<table class=" table-responsive table table-striped table-bordered table-hover"
 								id="data-table-list">
 								<thead>
 									<tr>
@@ -120,7 +119,6 @@
 									</c:forEach>
 								</tbody>
 							</table>
-						</div>
 					</div>
 				</div>
 			</div>
