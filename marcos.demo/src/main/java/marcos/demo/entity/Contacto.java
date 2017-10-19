@@ -5,28 +5,34 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name="contacto")
 public class Contacto implements Serializable {
 	
 	@Id
-	 @Column(name="ID")
-	 @GeneratedValue
+	 @Column(name="id")
+	 @GeneratedValue(strategy=GenerationType.IDENTITY)
 	 private Integer id;
 	
-	@Column(name="NOMBRE")
+	@Column(name="nombre")
 	 private String nombre;
 
-	 @Column(name="APELLIDO")
+	 @Column(name="apellido")
 	 private String apellido;
 
-	 @Column(name="EMAIL")
+	 @Column(name="email")
 	 private String email;
 
-	 @Column(name="NROTELEFONO")
+	 @NotNull
+	 @NotBlank
+	 @Column(name="nro_telefono")
 	 private String telefono;
 
 	 public String getEmail() {

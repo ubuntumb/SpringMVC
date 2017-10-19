@@ -10,76 +10,122 @@
 <spring:url value="/" var="urlHome" />
 
 <title>${list}</title>
-
-<link rel="stylesheet"	href="<spring:url value="/resources/css/bootstrap.min.css" />" type="text/css" >
-<link rel="stylesheet"	href="<spring:url value="/resources/css/bootstrap.min.css" />" type="text/css" >
-<link rel="stylesheet" 	href="${urlHome}css/dataTables.bootstrap.min.css" type="text/css">
-<link rel="stylesheet" 	href="${urlHome}css/bootstrap-theme.min.css" type="text/css">
-<link rel="stylesheet" 	href="${urlHome}/css/responsive.bootstrap.min.css" type="text/css">
-<link rel="stylesheet"	href="${urlHome}/css/font-awesome/css/font-awesome.min.css" type="text/css" >
-
+<link rel="stylesheet" 	href="<spring:url value="/resources/css/bootstrap.min.css" />" type="text/css" />
+<link rel="stylesheet" href="<spring:url value="/resources/css/bootstrap.min.css" />" type="text/css" />
+<link rel="stylesheet" href="<spring:url value="/resources/css/dataTables.bootstrap.min.css" />" type="text/css" />
+<link rel="stylesheet" href="<spring:url value="/resources/css/bootstrap-theme.min.css" />" type="text/css" />
+<link rel="stylesheet" href="<spring:url value="/resources/css/responsive.bootstrap.min.css" />" type="text/css" />
+<link rel="stylesheet" href="<spring:url value="/resources/css/font-awesome/css/font-awesome.min.css" />" type="text/css" />
 </head>
 
 <body>
-
-	<div class="row">
-		<div class="col-lg-12">
-			<h1 class="page-header"></h1>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header"></h1>
+			</div>
 		</div>
-	</div>
 
-	<div class='navigation' role='navigation'>
-		<a href="${urlHome}" class="btn btn-default"> <span
-			class="fa fa-home fa-fw"></span> <spring:message
-				code="default.home.label" />
-		</a>
+		<div class='navigation' role='navigation'>
+			<spring:url value="/contacto/index" var="urlIndex" />
+			<a href="${urlIndex}" class="btn btn-default"> <span
+				class="fa fa-home fa-fw"></span> <spring:message
+					code="default.home.label" />
+			</a>
 
-		<spring:url value="/contacto/create" var="urlCreate" />
-		<a class="btn btn-success" href="${urlCreate}"> <span
-			class="fa fa-plus fa-fw"></span> <spring:message
-				code="default.add.label" arguments="Contacto" />
-		</a>
+			<spring:url value="/contacto/create" var="urlCreate" />
+			<a class="btn btn-success" href="${urlCreate}"> <span
+				class="fa fa-plus fa-fw"></span> <spring:message code="default.add.label" arguments="Contacto" />
+			</a>
 
-	</div>
+		</div>
+		<br />
+		<div class="row">
 
-	<div id="list-contacto" role="main">
+			<div id="list-contacto" role="main">
 
-		<c:if test="${flash.message}">
-			<div class="alert ${flash.alert} alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert"
-					aria-label="Close">
-					<span aria-hidden="true">×</span>
-				</button>
-				<strong>${flash.message}</strong>
-			</div>
-		</c:if>
+				<c:if test="${message != null}">
+					<div class="alert ${alert} alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<strong>${message}</strong>
+					</div>
+				</c:if>
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<spring:message code="default.list.label" arguments="Contactos" />
-			</div>
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table table-striped table-bordered table-hover"
-						id="data-table-list">
-						<thead>
-							<tr>
-								<th><spring:message code="contacto.label.nombre" /></th>
-								<th><spring:message code="contacto.label.apellido" /></th>
-								<th><spring:message code="contacto.label.email" /></th>
-								<th><spring:message code="contacto.label.telefono" /></th>
-								<th><spring:message code="default.list.actions.label" /></th>
-							</tr>
-						</thead>
-						<tbody>
-
-						</tbody>
-					</table>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<spring:message code="default.list.label" arguments="Contactos" />
+					</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover"
+								id="data-table-list">
+								<thead>
+									<tr>
+										<th><spring:message code="contacto.label.nombre" /></th>
+										<th><spring:message code="contacto.label.apellido" /></th>
+										<th><spring:message code="contacto.label.email" /></th>
+										<th><spring:message code="contacto.label.telefono" /></th>
+										<th><spring:message code="default.list.actions.label" /></th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${contactos}" var="contacto" varStatus="i">
+										<c:choose>
+											<c:when test="${i.index  % 2 == 0 }">
+												<tr class="even">
+											</c:when>
+											<c:otherwise>
+												<tr class="odd">
+											</c:otherwise>
+										</c:choose>
+										<td>${contacto.getNombre()}</td>
+										<td>${contacto.getApellido()}</td>
+										<td>${contacto.getEmail()}</td>
+										<td>${contacto.getTelefono()}</td>
+										<td>
+											<div class="btn-group">
+												<spring:url value="/contacto/show/${contacto.id}" var="showUrl" />
+												<a class="btn btn-default btn-xs" href="${showUrl}">
+													<spring:message code="default.show.view.label" /> 
+												</a>
+												<button type="button"
+													class="btn btn-default dropdown-toggle btn-xs"
+													data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu pull-right" role="menu">
+													<li><a class="link"
+														href="${showUrl}"><span
+															class="fa fa-angle-double-right fa-fw"></span> <spring:message
+																code="default.show.view.label"></spring:message> </a>
+													</li>
+													<li><spring:url value="/contacto/edit/${contacto.id}" var="editUrl" />
+														<a class="link" href="${editUrl}"><span class="fa fa-edit fa-fw"></span>
+															<spring:message code="default.button.edit.label" /> 
+														</a>
+													</li>
+													<li>
+														<a href="#" class="link"
+															onClick="deleteInstance('${contacto.id}','${contacto.getClass().getSimpleName()}: ${contacto.nombre}');"
+															data-toggle="modal" data-target="#deleteModal" > <span
+															class="fa fa-trash-o fa-fw"></span> Eliminar
+													</a></li>
+												</ul>
+											</div>
+										</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
 	<!-- Delete Modal -->
 	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
@@ -121,26 +167,27 @@
 
 	</div>
 
-	<script type="text/javascript"
-		src="${urlHome}js/jquery-1.12.3.min.js"></script>
-	<script type="text/javascript"
-		src="${urlHome}js/bootstrap.min.js"></script>
-	<script type="text/javascript"
-		src="${urlHome}js/dataTables.bootstrap.min.js"></script>
-	<script type="text/javascript"
-		src="${urlHome}js/responsive.bootstrap.min.js"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/js/jquery-1.12.3.min.js" />"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/js/bootstrap.min.js" />"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/js/dataTables.bootstrap.min.js" />"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/js/responsive.bootstrap.min.js" /> "></script>
 
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#data-table-list').DataTable({
-				"language" : {
-					"url" : "${urlHome}js/dataTables.spanish.lang"
-				}
-			});
-		});
+		$(document)
+				.ready(
+						function() {
+							$('#data-table-list')
+									.DataTable(
+											{
+												"language" : {
+													"url" : "<spring:url value="resources/js/dataTables.spanish.lang" />"
+												},
+												scrollY: 400
+											});
+						});
 
 		function deleteInstance(id, instanceStr) {
-			var formurl = "${urlHome}/contacto/delete";
+			var formurl = "${urlHome}contacto/delete/"+id;
 			$('#deleteform').attr('action', formurl)
 			$('#deleteInstanceString').text(instanceStr)
 		}

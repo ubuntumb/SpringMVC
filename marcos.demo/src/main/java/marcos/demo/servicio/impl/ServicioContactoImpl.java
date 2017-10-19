@@ -1,31 +1,48 @@
 package marcos.demo.servicio.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import marcos.demo.dao.ContactoDao;
-import marcos.demo.dao.GenericsDao;
 import marcos.demo.entity.Contacto;
 import marcos.demo.servicio.ServicioContacto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-@Service
-public class ServicioContactoImpl extends GenericsServiceImpl<Contacto> implements ServicioContacto {
+@Service("servicioContacto")
+@Transactional
+public class ServicioContactoImpl implements ServicioContacto {
 	
-	private  final Logger logger = LoggerFactory.getLogger(ServicioContactoImpl.class);
 	
 	@Autowired
-	private ContactoDao contactoDao;
-	
-	public ServicioContactoImpl(){
-		logger.info("se instancia la clase ServicioContactoImpl");
+	private ContactoDao dao;
+
+	@Override
+	public void add(Contacto entity) {
+			dao.add(entity);	
 	}
 
 	@Override
-	public GenericsDao<Contacto> getDao() {
-		return this.contactoDao;
+	public List<Contacto> getAll() {
+		return dao.getAll();
+	}
+
+	@Override
+	public void remove(Integer id) {
+		dao.remove(id);
+	}
+
+	@Override
+	public void update(Contacto entity) {
+		dao.update(entity);
+	}
+
+	@Override
+	public Contacto getById(Integer id) {
+		return dao.getById(id);
 	}
 	
+
 
 }

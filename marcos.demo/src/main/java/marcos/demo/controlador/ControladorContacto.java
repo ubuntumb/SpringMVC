@@ -1,93 +1,127 @@
 package marcos.demo.controlador;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Locale;
 
-import marcos.demo.entity.Contacto;
-import marcos.demo.servicio.ServicioContacto;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import marcos.demo.entity.Contacto;
+import marcos.demo.servicio.ServicioContacto;
 
 @Controller
 @RequestMapping("/contacto")
 public class ControladorContacto {
 
-	private ModelMap modelo = new ModelMap();
-	private Contacto contact = new Contacto();
-
 	@Autowired
 	private ServicioContacto servicioContacto;
 
+	@Autowired
+	private ApplicationContext context;
+
 	@RequestMapping("/index")
-	public String listContacts(Map<String, Object> map) {
+	public String listContacto(Model model) {
 
-		if (modelo.isEmpty()) {
-			
-			contact.setId(-1);
-			map.put("contacto", contact);
-			
-		} else {
-			
-			map.putAll(modelo);
-			modelo.clear();
-		}
-
-		map.put("contactoList", servicioContacto.getAll());
+		List<Contacto> contactos = servicioContacto.getAll();
+		model.addAttribute("contactos", contactos);
 
 		return "contacto/index";
 	}
 
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String addContacto(@ModelAttribute("contacto") Contacto contacto,
-			BindingResult result) {
+	@RequestMapping(value = "/show/{id}", method = { RequestMethod.POST, RequestMethod.GET })
+	public String showContacto(@PathVariable("id") Integer contactId, Model model) {
 
-		if (contacto.getId() >= 1) {
+		Contacto contacto = servicioContacto.getById(contactId);
+		model.addAttribute("contacto", contacto);
 
-			servicioContacto.update(contacto);
+		return "contacto/show";
 
-		} else {
+	}
+
+	@RequestMapping(value = "/create", method = { RequestMethod.POST, RequestMethod.GET })
+	public String createContacto(Model model) {
+
+		Contacto contacto = new Contacto();
+		model.addAttribute("contacto", contacto);
+
+		return "contacto/create";
+
+	}
+
+	@RequestMapping(value = "/edit/{id}", method = { RequestMethod.POST, RequestMethod.PUT, RequestMethod.GET })
+	public String editContacto(@PathVariable("id") Integer contactoId, Model model) {
+
+		Contacto contacto = servicioContacto.getById(contactoId);
+		model.addAttribute("contacto", contacto);
+
+		return "contacto/edit";
+
+	}
+
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public String saveContacto(@Valid Contacto contacto, BindingResult result, ModelMap model) {
+
+		if (!result.hasErrors()) {
+
+			model.addAttribute("message", context.getMessage("default.created.message",
+					new Object[] { "Persona:", contacto.getNombre() }, Locale.US));
+			model.addAttribute("alert", "alert-success");
+			
 			servicioContacto.add(contacto);
+			
+			model.addAttribute("contacto", contacto);
+			
+			return "contacto/show";
+		}else{
+			model.addAttribute("contacto", contacto);
+			return "contacto/create";
 		}
 
-		return "redirect:/";
 	}
 
-	@RequestMapping("/delete/{contactId}")
-	public String deleteContact(@PathVariable("contactId") Integer contactId) {
+	@RequestMapping(value = "/delete/{id}", method = { RequestMethod.POST, RequestMethod.DELETE })
+	public String deleteContacto(@PathVariable("id") Integer contactId, Model model) {
+
+		Contacto contacto = servicioContacto.getById(contactId);
+		model.addAttribute("message", context.getMessage("default.deleted.message",
+				new Object[] { "Persona:", contacto.getNombre() }, Locale.US));
+		model.addAttribute("alert", "alert-success");
 
 		servicioContacto.remove(contactId);
+		
+		List<Contacto> contactos = servicioContacto.getAll();
+		model.addAttribute("contactos", contactos);
 
-		return "redirect:/";
+		return "contacto/index";
 	}
 
-	@RequestMapping("/update/{contactId}")
-	public String updateContact(@PathVariable("contactId") Integer contactId) {
+	@RequestMapping(value = "/update", method = { RequestMethod.POST, RequestMethod.PUT })
+	public String updateContacto(@Valid Contacto contacto, BindingResult result, ModelMap model) {
 
-		/*
-		 * ModelAndView mav = new ModelAndView("contactoUpdate"); Contacto
-		 * contacto = servicioContacto.getContactoId(contactId);
-		 * mav.addObject("lista", contacto);
-		 * System.out.println("Cantidad: "+contacto.getNombre());
-		 * System.out.println("CantidadIS: "+mav.isEmpty());
-		 */
-		// modelo = new ModelMap();
-		modelo.put("contacto", servicioContacto.getById(contactId));
+		if (!result.hasErrors()) {
 
-		return "redirect:/";
-	}
+			model.addAttribute("message", context.getMessage("default.updated.message",
+					new Object[] { "Persona:", contacto.getNombre() }, Locale.US));
+			model.addAttribute("alert", "alert-success");
+			model.addAttribute("contacto", contacto);
+			
+			servicioContacto.update(contacto);
+			return "contacto/show";
+			
+		}else{
+			model.addAttribute("contacto", contacto);
+			return "contacto/edit";
+		}
 
-	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public String updateContacts(@ModelAttribute("contacto") Contacto contacto,
-			BindingResult result) {
-
-		servicioContacto.update(contacto);
-
-		return "redirect:/";
+		
 	}
 }
